@@ -1,0 +1,10 @@
+# Intellij 
+.idea
+
+# Eclipse 
+.project
+.settings
+.classpath
+
+# Bin
+target
