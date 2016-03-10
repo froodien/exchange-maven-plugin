@@ -2,7 +2,7 @@ package org.mule.tools.maven.exchange;
 
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.maven.plugin.logging.Log;
-import org.mule.tools.maven.plugin.exchange.api.ExchangeObject;
+import org.mule.tools.maven.exchange.api.ExchangeObject;
 import org.mule.tools.maven.plugin.mule.AbstractMuleApi;
 import org.mule.tools.maven.plugin.mule.ApiException;
 

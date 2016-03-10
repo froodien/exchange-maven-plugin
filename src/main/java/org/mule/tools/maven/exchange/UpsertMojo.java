@@ -5,8 +5,8 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
-import org.mule.tools.maven.plugin.exchange.api.ExchangeObject;
-import org.mule.tools.maven.plugin.exchange.api.Version;
+import org.mule.tools.maven.exchange.api.ExchangeObject;
+import org.mule.tools.maven.exchange.api.Version;
 
 import java.io.IOException;
 import java.util.List;
