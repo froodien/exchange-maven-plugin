@@ -34,6 +34,41 @@
                 </pluginManagement>
                 <plugins>
                         <plugin>
+                                <groupId>org.jsonschema2pojo</groupId>
+                                <artifactId>jsonschema2pojo-maven-plugin</artifactId>
+                                <version>0.4.21</version>
+                                <configuration>
+                                        <includeConstructors>true</includeConstructors>
+                                        <sourceDirectory>${basedir}/src/main/resources/schema</sourceDirectory>
+                                        <targetPackage>org.mule.tools.maven.exchange.api</targetPackage>
+                                </configuration>
+                                <executions>
+                                        <execution>
+                                                <goals>
+                                                        <goal>generate</goal>
+                                                </goals>
+                                        </execution>
+                                </executions>
+                        </plugin>
+                        <plugin>
+                                <groupId>org.codehaus.mojo</groupId>
+                                <artifactId>build-helper-maven-plugin</artifactId>
+                                <executions>
+                                        <execution>
+                                                <id>add-source</id>
+                                                <phase>generate-sources</phase>
+                                                <goals>
+                                                        <goal>add-source</goal>
+                                                </goals>
+                                                <configuration>
+                                                        <sources>
+                                                                <source>${basedir}/target/java-gen</source>
+                                                        </sources>
+                                                </configuration>
+                                        </execution>
+                                </executions>
+                        </plugin>
+                        <plugin>
                                 <groupId>org.apache.maven.plugins</groupId>
                                 <artifactId>maven-compiler-plugin</artifactId>
                                 <version>2.3.2</version>
@@ -78,6 +113,21 @@
                         <artifactId>maven-plugin-annotations</artifactId>
                         <version>3.4</version>
                         <scope>provided</scope>
+                </dependency>
+                <dependency>
+                        <groupId>org.mule.tools.maven</groupId>
+                        <artifactId>mule-maven-plugin</artifactId>
+                        <version>2.1</version>
+                </dependency>
+                <dependency>
+                        <groupId>commons-lang</groupId>
+                        <artifactId>commons-lang</artifactId>
+                        <version>2.4</version>
+                </dependency>
+                <dependency>
+                        <groupId>com.fasterxml.jackson.core</groupId>
+                        <artifactId>jackson-databind</artifactId>
+                        <version>2.0.0</version>
                 </dependency>
 
                 <!-- Testing deps -->

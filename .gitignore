@@ -1,5 +1,6 @@
 # Intellij 
 .idea
+.iml
 
 # Eclipse 
 .project
@@ -8,3 +9,6 @@
 
 # Bin
 target
+
+# MAC
+**/.DS_Store
