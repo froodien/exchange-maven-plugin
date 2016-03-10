@@ -3,7 +3,7 @@ package org.mule.tools.maven.exchange;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
-import org.mule.tools.maven.plugin.exchange.api.ExchangeObject;
+import org.mule.tools.maven.exchange.api.ExchangeObject;
 
 import org.junit.Before;
 import org.junit.Ignore;
