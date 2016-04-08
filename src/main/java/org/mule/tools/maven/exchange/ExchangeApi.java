@@ -1,6 +1,5 @@
 package org.mule.tools.maven.exchange;
 
-import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.maven.plugin.logging.Log;
@@ -46,7 +45,7 @@ public class ExchangeApi extends AbstractMuleApi {
      * @throws org.mule.tools.maven.plugin.mule.ApiException if not successful.
      * @throws java.io.IOException if model error.
      */
-    public ExchangeObject updateExchangeObject(ExchangeObject exchangeObject) throws ApiException,IOException {
+    public ExchangeObject updateExchangeObject(ExchangeObject exchangeObject) throws ApiException, IOException {
         ObjectMapper mapper = new ObjectMapper();
         Entity<String> json = Entity.json(mapper.writeValueAsString(exchangeObject));
         Integer objectId = exchangeObject.getId();
@@ -55,7 +54,7 @@ public class ExchangeApi extends AbstractMuleApi {
 
         if (response.getStatus() == 200)
         {
-            return response.readEntity(ExchangeObject.class);
+            return mapper.readValue(response.readEntity(String.class), ExchangeObject.class);
         }
         else
         {
@@ -70,7 +69,7 @@ public class ExchangeApi extends AbstractMuleApi {
      * @throws org.mule.tools.maven.plugin.mule.ApiException if not successful.
      * @throws java.io.IOException if model error.
      */
-    public ExchangeObject createExchangeObject(ExchangeObject exchangeObject) throws IOException,ApiException {
+    public ExchangeObject createExchangeObject(ExchangeObject exchangeObject) throws ApiException, IOException {
         ObjectMapper mapper = new ObjectMapper();
         Entity<String> json = Entity.json(mapper.writeValueAsString(exchangeObject));
         String object_path = String.format(EXCHANGE_OBJECTS_PATH_TEMPLATE, getOrgId()) + '/';
@@ -78,7 +77,7 @@ public class ExchangeApi extends AbstractMuleApi {
 
         if (response.getStatus() == 201)
         {
-            return response.readEntity(ExchangeObject.class);
+            return mapper.readValue(response.readEntity(String.class), ExchangeObject.class);
         }
         else
         {
@@ -92,7 +91,8 @@ public class ExchangeApi extends AbstractMuleApi {
      * @return The object found, or null if it does not exist.
      * @throws org.mule.tools.maven.plugin.mule.ApiException if not successful.
      */
-    public ExchangeObject getExchangeObject(ExchangeObject exchangeObject) throws ApiException {
+    public ExchangeObject getExchangeObject(ExchangeObject exchangeObject) throws ApiException, IOException {
+        ObjectMapper mapper = new ObjectMapper();
         String object_path = String.format(EXCHANGE_OBJECTS_PATH_TEMPLATE, getOrgId()) + '/';
 
         // TODO Exchange API returns the object without name url when created
@@ -106,7 +106,7 @@ public class ExchangeApi extends AbstractMuleApi {
 
         if (response.getStatus() == 200)
         {
-            return response.readEntity(ExchangeObject.class);
+            return mapper.readValue(response.readEntity(String.class), ExchangeObject.class);
         }
 
         // TODO Fix when EXCHANGE-1005 is closed
@@ -123,14 +123,15 @@ public class ExchangeApi extends AbstractMuleApi {
      * @return The object when deleted.
      * @throws org.mule.tools.maven.plugin.mule.ApiException if not successful.
      */
-    public ExchangeObject deleteExchangeObject(ExchangeObject exchangeObject) throws ApiException {
+    public ExchangeObject deleteExchangeObject(ExchangeObject exchangeObject) throws ApiException, IOException {
+        ObjectMapper mapper = new ObjectMapper();
         Integer objectId = exchangeObject.getId();
         String object_path = String.format(EXCHANGE_OBJECTS_PATH_TEMPLATE, getOrgId()) + '/' + objectId;
         Response response = delete(uri, object_path);
 
         if (response.getStatus() == 200)
         {
-            return response.readEntity(ExchangeObject.class);
+            return mapper.readValue(response.readEntity(String.class), ExchangeObject.class);
         }
 
         throw new ApiException(response);
