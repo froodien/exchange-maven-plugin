@@ -30,6 +30,9 @@ public class ExchangeApiTestCase
     private static final String EXCHANGE_VERSION_DOWNLOAD_URL = "http://www.google.com";
     private static final String EXCHANGE_VERSION_DOC_URL = "http://www.google.com";
     private static final String EXCHANGE_VERSION_OBJECT_VERSION = "1.2.3";
+    private static final Integer EXCHANGE_OBJECT_TYPE_ID_TEMPLATE = 1;
+    private static final Integer EXCHANGE_OBJECT_TYPE_ID_CONNECTOR = 2;
+    private static final Integer EXCHANGE_OBJECT_TYPE_ID_EXAMPLE = 3;
 
     private ExchangeApi exchangeApi;
 
@@ -41,8 +44,7 @@ public class ExchangeApiTestCase
     }
 
     @Test
-    public void getExchangeObject()
-    {
+    public void getExchangeObject() throws IOException {
         ExchangeObject exchangeObject = createTestExchangeObject(EXISTING_EXCHANGE_OBJECT_NAME_URL);
         verifyExchangeObjectExist(exchangeObject);
     }
@@ -80,6 +82,18 @@ public class ExchangeApiTestCase
         createdExchangeObject.setVersions(versions);
         ExchangeObject updatedExchangeObject = exchangeApi.updateExchangeObject(createdExchangeObject);
         assertEquals(
+                "Object returned in the update should match the expected version Mule version ID",
+                EXCHANGE_VERSION_MULE_VERSION_ID,
+                updatedExchangeObject.getVersions().get(0).getMuleVersionId());
+        assertEquals(
+                "Object returned in the update should match the expected version download URL",
+                EXCHANGE_VERSION_DOWNLOAD_URL,
+                updatedExchangeObject.getVersions().get(0).getDownloadUrl());
+        assertEquals(
+                "Object returned in the update should match the expected version doc URL",
+                EXCHANGE_VERSION_DOC_URL,
+                updatedExchangeObject.getVersions().get(0).getDocUrl());
+        assertEquals(
                 "Object returned in the update should match the expected version name",
                 EXCHANGE_VERSION_OBJECT_VERSION,
                 updatedExchangeObject.getVersions().get(0).getObjectVersion());
@@ -96,18 +110,16 @@ public class ExchangeApiTestCase
         exchangeObject.setNameUrl(nameUrl);
         exchangeObject.setName(EXCHANGE_OBJECT_NAME);
         exchangeObject.setOwner(USERNAME);
-        exchangeObject.setTypeId(1);
+        exchangeObject.setTypeId(EXCHANGE_OBJECT_TYPE_ID_TEMPLATE);
 
         return exchangeObject;
     }
 
-    private void verifyExchangeObjectDoesntExist(ExchangeObject exchangeObject)
-    {
+    private void verifyExchangeObjectDoesntExist(ExchangeObject exchangeObject) throws IOException {
         assertThat(exchangeApi.getExchangeObject(exchangeObject), nullValue());
     }
 
-    private void verifyExchangeObjectExist(ExchangeObject exchangeObject)
-    {
+    private void verifyExchangeObjectExist(ExchangeObject exchangeObject) throws IOException {
         assertThat(exchangeApi.getExchangeObject(exchangeObject), notNullValue());
     }
 
