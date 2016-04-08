@@ -9,7 +9,7 @@
     },
     "organization_id": {
       "id": "http://jsonschema.net/organization_id",
-      "type": "integer"
+      "type": "string"
     },
     "id": {
       "id": "http://jsonschema.net/id",
@@ -225,7 +225,7 @@
       "properties": {
         "id": {
           "id": "http://jsonschema.net/organization/id",
-          "type": "integer"
+          "type": "string"
         },
         "name": {
           "id": "http://jsonschema.net/organization/name",
