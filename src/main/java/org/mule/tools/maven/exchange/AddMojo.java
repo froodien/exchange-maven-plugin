@@ -13,8 +13,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@Mojo(name = "upsert")
-public class UpsertMojo extends AbstractMojo {
+@Mojo(name = "add")
+public class AddMojo extends AbstractMojo {
 
     @Parameter( defaultValue = "${project}", readonly = true)
     private MavenProject mavenProject;
@@ -24,8 +24,8 @@ public class UpsertMojo extends AbstractMojo {
     private String anypointPassword;
     @Parameter( name = "nameUrl", required = true, readonly = true)
     private String nameUrl;
-    @Parameter( name = "typeId", required = true, readonly = true)
-    private Integer typeId;
+    @Parameter( name = "objectType", required = true, readonly = true)
+    private ExchangeObjectType objectType;
     @Parameter( name = "anypointEnvironment", defaultValue = "Production", readonly = true)
     private String anypointEnvironment;
     @Parameter( name = "anypointUri", defaultValue = "https://anypoint.mulesoft.com", readonly = true)
@@ -64,7 +64,7 @@ public class UpsertMojo extends AbstractMojo {
         exchangeObject.setName(mavenProject.getArtifactId());
         exchangeObject.setNameUrl(nameUrl);
         exchangeObject.setOwner(anypointUsername);
-        exchangeObject.setTypeId(typeId);
+        exchangeObject.setTypeId(objectType.id());
         exchangeObject.setDescription(getDescription());
         version.setObjectVersion(mavenProject.getVersion());
         version.setMuleVersionId(getMuleRuntimeVersion());
