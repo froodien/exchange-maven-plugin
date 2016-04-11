@@ -12,7 +12,7 @@ public class MojoConstants {
             "euismod molestie.";
     static final String MULE_RUNTIME_VERSION_PATTERN_MATCHER = "^([1-4]\\.[0-9]).*$";
     static final String MULE_DOWNLOAD_URL_PATTERN_MATCHER = "^(.*).mule$";
-    static final String MULE_GITHUB_CONNECTION_URL_PATTERN_MATCHER = "^scm:git:(.*)\\.git.*$";
+    static final String MULE_GITHUB_CONNECTION_URL_PATTERN_MATCHER = "^scm:git:(.*github\\.com.*)\\.git.*$";
     static final String DEFAULT_DESCRIPTION_FILE_SOURCE = "README.md";
     static final String DEFAULT_VERSIONING_STRATEGY = "incremental";
 }
