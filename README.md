@@ -55,7 +55,7 @@ Add the following Maven Repository to your settings.xml file.
 
 ## Configuration example
 
-Within Build -> Plugins section:
+When running from command line, add the following configuration within Build -> Plugins section:
 
 ```
 <plugin>
@@ -72,6 +72,35 @@ Within Build -> Plugins section:
         <anypointUri>https://anypoint.mulesoft.com</anypointUri>
         <muleRuntimeVersion>3.7</muleRuntimeVersion>
     </configuration>
+</plugin>
+```
+
+When running as part of the Maven deploy (e.g. in a Continuous Integration server), add after the latest plugin:
+
+```
+<plugin>
+    <groupId>org.mule.tools</groupId>
+    <artifactId>exchange-maven-plugin</artifactId>
+    <version>1.0.0</version>
+    <configuration>
+        <anypointUsername>${anypointUsername}</anypointUsername>
+        <anypointPassword>${anypointPassword}</anypointPassword>
+        <nameUrl>template-name-url</nameUrl>
+        <objectType>template</objectType>
+        <!-- Optional Values (with defaults) -->
+        <versioningStrategy>incremental</versioningStrategy>
+        <anypointUri>https://anypoint.mulesoft.com</anypointUri>
+        <muleRuntimeVersion>3.7</muleRuntimeVersion>
+    </configuration>
+    <executions>
+        <execution>
+            <id>exchange-update</id>
+            <phase>deploy</phase>
+            <goals>
+                <goal>add</goal>
+            </goals>
+        </execution>
+    </executions>    
 </plugin>
 ```
 
