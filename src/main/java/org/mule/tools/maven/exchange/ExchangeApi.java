@@ -3,6 +3,7 @@ package org.mule.tools.maven.exchange;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.maven.plugin.logging.Log;
+import org.mule.tools.maven.exchange.api.ExchangeAuthorizationResponse;
 import org.mule.tools.maven.exchange.api.ExchangeObject;
 import org.mule.tools.maven.plugin.mule.AbstractMuleApi;
 import org.mule.tools.maven.plugin.mule.ApiException;
@@ -146,8 +147,10 @@ public class ExchangeApi extends AbstractMuleApi {
 
         if (response.getStatus() == 200)
         {
-            ExchangeAuthorizationResponse authorizationResponse = response.readEntity(ExchangeAuthorizationResponse.class);
-            return authorizationResponse.token;
+            ExchangeAuthorizationResponse authorizationResponse = response.readEntity(
+                    ExchangeAuthorizationResponse.class
+            );
+            return authorizationResponse.getToken();
         }
         else
         {

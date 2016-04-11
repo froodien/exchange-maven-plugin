@@ -1,0 +1,256 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "id": "http://jsonschema.net",
+    "type": "object",
+    "properties": {
+        "user": {
+            "id": "http://jsonschema.net/user",
+            "type": "object",
+            "properties": {
+                "account": {
+                    "id": "http://jsonschema.net/user/account",
+                    "type": "object",
+                    "properties": {
+                        "id": {
+                            "id": "http://jsonschema.net/user/account/id",
+                            "type": "string"
+                        },
+                        "createdAt": {
+                            "id": "http://jsonschema.net/user/account/createdAt",
+                            "type": "string"
+                        },
+                        "updatedAt": {
+                            "id": "http://jsonschema.net/user/account/updatedAt",
+                            "type": "string"
+                        },
+                        "firstName": {
+                            "id": "http://jsonschema.net/user/account/firstName",
+                            "type": "string"
+                        },
+                        "lastName": {
+                            "id": "http://jsonschema.net/user/account/lastName",
+                            "type": "string"
+                        },
+                        "email": {
+                            "id": "http://jsonschema.net/user/account/email",
+                            "type": "string"
+                        },
+                        "phoneNumber": {
+                            "id": "http://jsonschema.net/user/account/phoneNumber",
+                            "type": "string"
+                        },
+                        "username": {
+                            "id": "http://jsonschema.net/user/account/username",
+                            "type": "string"
+                        },
+                        "enabled": {
+                            "id": "http://jsonschema.net/user/account/enabled",
+                            "type": "boolean"
+                        },
+                        "deleted": {
+                            "id": "http://jsonschema.net/user/account/deleted",
+                            "type": "boolean"
+                        },
+                        "organization": {
+                            "id": "http://jsonschema.net/user/account/organization",
+                            "type": "object",
+                            "properties": {
+                                "name": {
+                                    "id": "http://jsonschema.net/user/account/organization/name",
+                                    "type": "string"
+                                },
+                                "domain": {
+                                    "id": "http://jsonschema.net/user/account/organization/domain",
+                                    "type": "string"
+                                },
+                                "id": {
+                                    "id": "http://jsonschema.net/user/account/organization/id",
+                                    "type": "integer"
+                                }
+                            }
+                        },
+                        "properties": {
+                            "id": "http://jsonschema.net/user/account/properties",
+                            "type": "object",
+                            "properties": {}
+                        },
+                        "permissions": {
+                            "id": "http://jsonschema.net/user/account/permissions",
+                            "type": "object",
+                            "properties": {
+                                "read": {
+                                    "id": "http://jsonschema.net/user/account/permissions/read",
+                                    "type": "array",
+                                    "items": [
+                                        {
+                                            "id": "http://jsonschema.net/user/account/permissions/read/0",
+                                            "type": "string"
+                                        },
+                                        {
+                                            "id": "http://jsonschema.net/user/account/permissions/read/1",
+                                            "type": "string"
+                                        },
+                                        {
+                                            "id": "http://jsonschema.net/user/account/permissions/read/2",
+                                            "type": "string"
+                                        },
+                                        {
+                                            "id": "http://jsonschema.net/user/account/permissions/read/3",
+                                            "type": "string"
+                                        },
+                                        {
+                                            "id": "http://jsonschema.net/user/account/permissions/read/4",
+                                            "type": "string"
+                                        }
+                                    ]
+                                },
+                                "create": {
+                                    "id": "http://jsonschema.net/user/account/permissions/create",
+                                    "type": "array",
+                                    "items": [
+                                        {
+                                            "id": "http://jsonschema.net/user/account/permissions/create/0",
+                                            "type": "string"
+                                        },
+                                        {
+                                            "id": "http://jsonschema.net/user/account/permissions/create/1",
+                                            "type": "string"
+                                        },
+                                        {
+                                            "id": "http://jsonschema.net/user/account/permissions/create/2",
+                                            "type": "string"
+                                        },
+                                        {
+                                            "id": "http://jsonschema.net/user/account/permissions/create/3",
+                                            "type": "string"
+                                        },
+                                        {
+                                            "id": "http://jsonschema.net/user/account/permissions/create/4",
+                                            "type": "string"
+                                        }
+                                    ]
+                                },
+                                "update": {
+                                    "id": "http://jsonschema.net/user/account/permissions/update",
+                                    "type": "array",
+                                    "items": [
+                                        {
+                                            "id": "http://jsonschema.net/user/account/permissions/update/0",
+                                            "type": "string"
+                                        },
+                                        {
+                                            "id": "http://jsonschema.net/user/account/permissions/update/1",
+                                            "type": "string"
+                                        },
+                                        {
+                                            "id": "http://jsonschema.net/user/account/permissions/update/2",
+                                            "type": "string"
+                                        },
+                                        {
+                                            "id": "http://jsonschema.net/user/account/permissions/update/3",
+                                            "type": "string"
+                                        },
+                                        {
+                                            "id": "http://jsonschema.net/user/account/permissions/update/4",
+                                            "type": "string"
+                                        }
+                                    ]
+                                },
+                                "delete": {
+                                    "id": "http://jsonschema.net/user/account/permissions/delete",
+                                    "type": "array",
+                                    "items": {
+                                        "id": "http://jsonschema.net/user/account/permissions/delete/0",
+                                        "type": "string"
+                                    }
+                                },
+                                "list": {
+                                    "id": "http://jsonschema.net/user/account/permissions/list",
+                                    "type": "array",
+                                    "items": [
+                                        {
+                                            "id": "http://jsonschema.net/user/account/permissions/list/0",
+                                            "type": "string"
+                                        },
+                                        {
+                                            "id": "http://jsonschema.net/user/account/permissions/list/1",
+                                            "type": "string"
+                                        },
+                                        {
+                                            "id": "http://jsonschema.net/user/account/permissions/list/2",
+                                            "type": "string"
+                                        },
+                                        {
+                                            "id": "http://jsonschema.net/user/account/permissions/list/3",
+                                            "type": "string"
+                                        },
+                                        {
+                                            "id": "http://jsonschema.net/user/account/permissions/list/4",
+                                            "type": "string"
+                                        },
+                                        {
+                                            "id": "http://jsonschema.net/user/account/permissions/list/5",
+                                            "type": "string"
+                                        }
+                                    ]
+                                },
+                                "requestpublish": {
+                                    "id": "http://jsonschema.net/user/account/permissions/requestpublish",
+                                    "type": "array",
+                                    "items": []
+                                },
+                                "publish": {
+                                    "id": "http://jsonschema.net/user/account/permissions/publish",
+                                    "type": "array",
+                                    "items": {
+                                        "id": "http://jsonschema.net/user/account/permissions/publish/0",
+                                        "type": "string"
+                                    }
+                                },
+                                "unpublish": {
+                                    "id": "http://jsonschema.net/user/account/permissions/unpublish",
+                                    "type": "array",
+                                    "items": {
+                                        "id": "http://jsonschema.net/user/account/permissions/unpublish/0",
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "required": [
+                        "id",
+                        "createdAt",
+                        "updatedAt",
+                        "firstName",
+                        "lastName",
+                        "email",
+                        "phoneNumber",
+                        "username",
+                        "enabled",
+                        "deleted",
+                        "organization",
+                        "properties",
+                        "permissions"
+                    ]
+                },
+                "domain": {
+                    "id": "http://jsonschema.net/user/domain",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "account",
+                "domain"
+            ]
+        },
+        "token": {
+            "id": "http://jsonschema.net/token",
+            "type": "string"
+        }
+    },
+    "required": [
+        "user",
+        "token"
+    ]
+}
