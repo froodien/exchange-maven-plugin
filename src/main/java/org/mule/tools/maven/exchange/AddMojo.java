@@ -104,6 +104,10 @@ public class AddMojo extends AbstractMojo {
         getLog().info("Version Download URL: " + downloadUrl);
         version.setDownloadUrl(downloadUrl);
 
+        String docUrl = obtainDocUrl();
+        getLog().info("Version Doc URL: " + docUrl);
+        version.setDocUrl(docUrl);
+
         versions.add(version);
         exchangeObject.setVersions(versions);
     }
@@ -148,7 +152,34 @@ public class AddMojo extends AbstractMojo {
 
     private String obtainDownloadUrl() {
         if (mavenProject.getDistributionManagement() != null) {
-            return mavenProject.getDistributionManagement().getDownloadUrl();
+            String downloadUrl = mavenProject.getDistributionManagement().getRepository().getUrl() +
+                    mavenProject.getDistributionManagementArtifactRepository().pathOf(mavenProject.getArtifact());
+
+            Pattern pattern = Pattern.compile(MojoConstants.MULE_DOWNLOAD_URL_PATTERN_MATCHER);
+            Matcher matcher = pattern.matcher(downloadUrl);
+            if (matcher.find()) {
+                downloadUrl = matcher.group(1) + ".zip";
+            }
+            return downloadUrl;
+        }
+        return null;
+    }
+
+    private String obtainDocUrl() {
+        if (mavenProject.getScm() != null) {
+            File readme = new File(MojoConstants.DEFAULT_DESCRIPTION_FILE_SOURCE);
+            if (readme.exists()) {
+                String connectionUrl = mavenProject.getScm().getConnection();
+                Pattern pattern = Pattern.compile(MojoConstants.MULE_GITHUB_CONNECTION_URL_PATTERN_MATCHER);
+                Matcher matcher = pattern.matcher(connectionUrl);
+                if (matcher.find()) {
+                    return matcher.group(1)
+                            + "/blob/"
+                            + mavenProject.getScm().getTag()
+                            + "/"
+                            + MojoConstants.DEFAULT_DESCRIPTION_FILE_SOURCE;
+                }
+            }
         }
         return null;
     }
