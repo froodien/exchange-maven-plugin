@@ -8,25 +8,40 @@ public enum VersioningStrategyType {
     incremental {
         @Override
         public List<Version> mergeVersions(List<Version> existingVersions, List<Version> newVersions) {
-            List<Version> returnVersions = existingVersions;
-            for (Version version: newVersions) {
-                returnVersions.add(version);
+            for (Version newVersion: newVersions) {
+                existingVersions.add(newVersion);
             }
-            return returnVersions;
+            return existingVersions;
         }
     },
     byMuleRuntime {
         @Override
         public List<Version> mergeVersions(List<Version> existingVersions, List<Version> newVersions) {
-            // TODO Implement
-            return null;
+            for (Version newVersion: newVersions) {
+                for (Version existingVersion: existingVersions){
+                    if (existingVersion.getMuleVersionId() == newVersion.getMuleVersionId()) {
+                        existingVersions.set(
+                                existingVersions.indexOf(existingVersion),
+                                newVersion);
+                    }
+                }
+            }
+            return existingVersions;
         }
     },
     byVersionName {
         @Override
         public List<Version> mergeVersions(List<Version> existingVersions, List<Version> newVersions) {
-            // TODO Implement
-            return null;
+            for (Version newVersion: newVersions) {
+                for (Version existingVersion: existingVersions){
+                    if (existingVersion.getObjectVersion() == newVersion.getObjectVersion()) {
+                        existingVersions.set(
+                                existingVersions.indexOf(existingVersion),
+                                newVersion);
+                    }
+                }
+            }
+            return existingVersions;
         }
     },
     byDevKit {
