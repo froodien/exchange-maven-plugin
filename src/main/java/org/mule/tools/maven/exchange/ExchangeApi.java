@@ -31,12 +31,7 @@ public class ExchangeApi extends AbstractMuleApi {
     public void init()
     {
         super.init();
-        try {
-            exchangeToken = obtainExchangeToken();
-        } catch (IllegalAccessException e) {
-            // TODO Handle exception properly
-            e.printStackTrace();
-        }
+        exchangeToken = obtainExchangeToken();
     }
 
     /**
@@ -95,14 +90,7 @@ public class ExchangeApi extends AbstractMuleApi {
     public ExchangeObject getExchangeObject(ExchangeObject exchangeObject) throws ApiException, IOException {
         ObjectMapper mapper = new ObjectMapper();
         String object_path = String.format(EXCHANGE_OBJECTS_PATH_TEMPLATE, getOrgId()) + '/';
-
-        // TODO Exchange API returns the object without name url when created
-        if (exchangeObject.getNameUrl() != null) {
-            object_path += exchangeObject.getNameUrl();
-        } else {
-            object_path += exchangeObject.getId();
-        }
-
+        object_path += exchangeObject.getNameUrl();
         Response response = get(uri, object_path);
 
         if (response.getStatus() == 200)
@@ -137,8 +125,13 @@ public class ExchangeApi extends AbstractMuleApi {
         throw new ApiException(response);
     }
 
-    private String obtainExchangeToken() throws IllegalAccessException {
-        String bearerToken = (String) FieldUtils.readField(this, "bearerToken", true);
+    private String obtainExchangeToken() {
+        String bearerToken = null;
+        try {
+            bearerToken = (String) FieldUtils.readField(this, "bearerToken", true);
+        } catch (IllegalAccessException e) {
+            throw new IllegalStateException(e);
+        }
         String json_string = String.format(EXCHANGE_TOKEN_REQUEST_TEMPLATE, bearerToken);
         Entity<String> json = Entity.json(json_string);
 
