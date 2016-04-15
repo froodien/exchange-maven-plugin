@@ -110,8 +110,7 @@ public class ExchangeApi extends AbstractMuleApi {
             return mapper.readValue(response.readEntity(String.class), ExchangeObject.class);
         }
 
-        // TODO Fix when EXCHANGE-1005 is closed
-        if ((response.getStatus() == 500)||(response.getStatus() == 404)) {
+        if (response.getStatus() == 404) {
             return null;
         }
 
