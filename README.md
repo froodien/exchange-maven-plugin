@@ -109,3 +109,9 @@ When running as part of the Maven deploy (e.g. in a Continuous Integration serve
 ```
 mvn exchange:add
 ```
+
+## Running from commandline without configuration
+
+```
+mvn org.mule.tools:exchange-maven-plugin:1.0.0:add -DnameUrl=template-name-url -DobjectType=template -DversioningStrategy=incremental -DanypointUsername=username -DanypointPassword=password
+```

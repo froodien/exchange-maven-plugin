@@ -20,7 +20,7 @@ public enum VersioningStrategyType {
             for (Version newVersion: newVersions) {
                 boolean added = false;
                 for (Version existingVersion: existingVersions){
-                    if (existingVersion.getMuleVersionId() == newVersion.getMuleVersionId()) {
+                    if (existingVersion.getMuleVersionId().equals(newVersion.getMuleVersionId())) {
                         existingVersions.set(
                                 existingVersions.indexOf(existingVersion),
                                 newVersion);
@@ -40,7 +40,7 @@ public enum VersioningStrategyType {
             for (Version newVersion: newVersions) {
                 boolean added = false;
                 for (Version existingVersion: existingVersions){
-                    if (existingVersion.getObjectVersion() == newVersion.getObjectVersion()) {
+                    if (existingVersion.getObjectVersion().equals(newVersion.getObjectVersion())) {
                         existingVersions.set(
                                 existingVersions.indexOf(existingVersion),
                                 newVersion);

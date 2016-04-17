@@ -27,36 +27,40 @@ import java.util.regex.Pattern;
 public class AddMojo extends AbstractMojo {
     @Parameter( defaultValue = "${project}", readonly = true)
     private MavenProject mavenProject;
-    @Parameter( name = "anypointUsername", required = true, readonly = true)
+    @Parameter( name = "anypointUsername", required = true, readonly = true, property = "anypointUsername")
     private String anypointUsername;
-    @Parameter( name = "anypointPassword", required = true, readonly = true)
+    @Parameter( name = "anypointPassword", required = true, readonly = true, property = "anypointPassword")
     private String anypointPassword;
-    @Parameter( name = "nameUrl", required = true, readonly = true)
+    @Parameter( name = "nameUrl", required = true, readonly = true, property = "nameUrl")
     private String nameUrl;
-    @Parameter( name = "objectType", required = true, readonly = true)
+    @Parameter( name = "objectType", required = true, readonly = true, property = "objectType")
     private ExchangeObjectType objectType;
     @Parameter(
             name = "versioningStrategy",
             defaultValue = MojoConstants.DEFAULT_VERSIONING_STRATEGY,
-            readonly = true
+            readonly = true,
+            property = "versioningStrategy"
     )
     private VersioningStrategyType versioningStrategy;
     @Parameter(
             name = "muleRuntimeVersion",
             defaultValue = MojoConstants.DEFAULT_MULE_RUNTIME,
-            readonly = true
+            readonly = true,
+            property = "muleRuntimeVersion"
     )
     private String muleRuntimeVersion;
     @Parameter(
             name = "anypointUri",
             defaultValue = MojoConstants.DEFAULT_ANYPOINT_URI,
-            readonly = true
+            readonly = true,
+            property = "anypointUri"
     )
     private String anypointUri;
     @Parameter(
             name = "exchangeApiVersion",
             defaultValue = MojoConstants.DEFAULT_EXCHANGE_API_VERSION,
-            readonly = true
+            readonly = true,
+            property = "exchangeApiVersion"
     )
     private ExchangeApiVersion exchangeApiVersion;
 
