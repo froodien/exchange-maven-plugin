@@ -18,12 +18,17 @@ public enum VersioningStrategyType {
         @Override
         public List<Version> mergeVersions(List<Version> existingVersions, List<Version> newVersions) {
             for (Version newVersion: newVersions) {
+                boolean added = false;
                 for (Version existingVersion: existingVersions){
                     if (existingVersion.getMuleVersionId() == newVersion.getMuleVersionId()) {
                         existingVersions.set(
                                 existingVersions.indexOf(existingVersion),
                                 newVersion);
+                        added = true;
                     }
+                }
+                if (!added) {
+                    existingVersions.add(newVersion);
                 }
             }
             return existingVersions;
@@ -33,12 +38,17 @@ public enum VersioningStrategyType {
         @Override
         public List<Version> mergeVersions(List<Version> existingVersions, List<Version> newVersions) {
             for (Version newVersion: newVersions) {
+                boolean added = false;
                 for (Version existingVersion: existingVersions){
                     if (existingVersion.getObjectVersion() == newVersion.getObjectVersion()) {
                         existingVersions.set(
                                 existingVersions.indexOf(existingVersion),
                                 newVersion);
+                        added = true;
                     }
+                }
+                if (!added) {
+                    existingVersions.add(newVersion);
                 }
             }
             return existingVersions;
