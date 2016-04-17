@@ -33,13 +33,14 @@ public class ExchangeApiTestCase
     private static final Integer EXCHANGE_OBJECT_TYPE_ID_TEMPLATE = 1;
     private static final Integer EXCHANGE_OBJECT_TYPE_ID_CONNECTOR = 2;
     private static final Integer EXCHANGE_OBJECT_TYPE_ID_EXAMPLE = 3;
+    private static final ExchangeApiVersion EXCHANGE_API_VERSION = ExchangeApiVersion.v16;
 
     private ExchangeApi exchangeApi;
 
     @Before
     public void setup()
     {
-        exchangeApi = new ExchangeApi(URI, null, USERNAME, PASSWORD, ENVIRONMENT);
+        exchangeApi = new ExchangeApi(URI, null, USERNAME, PASSWORD, ENVIRONMENT, EXCHANGE_API_VERSION);
         exchangeApi.init();
     }
 

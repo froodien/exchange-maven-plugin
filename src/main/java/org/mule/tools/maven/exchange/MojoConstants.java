@@ -15,4 +15,5 @@ public class MojoConstants {
     static final String MULE_GITHUB_CONNECTION_URL_PATTERN_MATCHER = "^scm:git:(.*github\\.com.*)\\.git.*$";
     static final String DEFAULT_DESCRIPTION_FILE_SOURCE = "README.md";
     static final String DEFAULT_VERSIONING_STRATEGY = "incremental";
+    static final String DEFAULT_EXCHANGE_API_VERSION = "v16";
 }

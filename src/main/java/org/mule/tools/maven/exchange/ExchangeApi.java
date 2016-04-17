@@ -5,6 +5,7 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.maven.plugin.logging.Log;
 import org.mule.tools.maven.exchange.api.ExchangeAuthorizationResponse;
 import org.mule.tools.maven.exchange.api.ExchangeObject;
+import org.mule.tools.maven.exchange.api.User;
 import org.mule.tools.maven.plugin.mule.AbstractMuleApi;
 import org.mule.tools.maven.plugin.mule.ApiException;
 
@@ -16,15 +17,23 @@ import java.io.IOException;
 public class ExchangeApi extends AbstractMuleApi {
     private static final String EXCHANGE_TOKEN_HEADER = "x-token";
     private static final String EXCHANGE_TOKEN_PATH = "/exchange/api/exchangeToken";
-    private static final String EXCHANGE_OBJECTS_PATH_TEMPLATE = "/exchange/api/organizations/%s/objects";
     private static final String EXCHANGE_TOKEN_REQUEST_TEMPLATE = "{" +
             "  \"access_token\": \"%s\"" +
             "  }";
     private String exchangeToken;
+    private User user;
+    private ExchangeApiVersion exchangeApiVersion;
 
-    public ExchangeApi(String uri, Log log, String username, String password, String environment) {
+    public ExchangeApi(
+            String uri,
+            Log log,
+            String username,
+            String password,
+            String environment,
+            ExchangeApiVersion exchangeApiVersion) {
         // Business groups not supported yet
         super(uri, log, username, password, environment, null);
+        this.exchangeApiVersion = exchangeApiVersion;
     }
 
     @Override
@@ -45,7 +54,7 @@ public class ExchangeApi extends AbstractMuleApi {
         ObjectMapper mapper = new ObjectMapper();
         Entity<String> json = Entity.json(mapper.writeValueAsString(exchangeObject));
         Integer objectId = exchangeObject.getId();
-        String object_path = String.format(EXCHANGE_OBJECTS_PATH_TEMPLATE, getOrgId()) + '/' + objectId;
+        String object_path = exchangeApiVersion.buildExchangeObjectsPath(this) + '/' + objectId;
         Response response = put(uri, object_path, json);
 
         if (response.getStatus() == 200)
@@ -68,7 +77,7 @@ public class ExchangeApi extends AbstractMuleApi {
     public ExchangeObject createExchangeObject(ExchangeObject exchangeObject) throws ApiException, IOException {
         ObjectMapper mapper = new ObjectMapper();
         Entity<String> json = Entity.json(mapper.writeValueAsString(exchangeObject));
-        String object_path = String.format(EXCHANGE_OBJECTS_PATH_TEMPLATE, getOrgId()) + '/';
+        String object_path = exchangeApiVersion.buildExchangeObjectsPath(this) + '/';
         Response response = post(uri, object_path, json);
 
         if (response.getStatus() == 201)
@@ -89,7 +98,7 @@ public class ExchangeApi extends AbstractMuleApi {
      */
     public ExchangeObject getExchangeObject(ExchangeObject exchangeObject) throws ApiException, IOException {
         ObjectMapper mapper = new ObjectMapper();
-        String object_path = String.format(EXCHANGE_OBJECTS_PATH_TEMPLATE, getOrgId()) + '/';
+        String object_path = exchangeApiVersion.buildExchangeObjectsPath(this) + '/';
         object_path += exchangeObject.getNameUrl();
         Response response = get(uri, object_path);
 
@@ -114,7 +123,7 @@ public class ExchangeApi extends AbstractMuleApi {
     public ExchangeObject deleteExchangeObject(ExchangeObject exchangeObject) throws ApiException, IOException {
         ObjectMapper mapper = new ObjectMapper();
         Integer objectId = exchangeObject.getId();
-        String object_path = String.format(EXCHANGE_OBJECTS_PATH_TEMPLATE, getOrgId()) + '/' + objectId;
+        String object_path = exchangeApiVersion.buildExchangeObjectsPath(this) + '/' + objectId;
         Response response = delete(uri, object_path);
 
         if (response.getStatus() == 200)
@@ -142,6 +151,7 @@ public class ExchangeApi extends AbstractMuleApi {
             ExchangeAuthorizationResponse authorizationResponse = response.readEntity(
                     ExchangeAuthorizationResponse.class
             );
+            user = authorizationResponse.getUser();
             return authorizationResponse.getToken();
         }
         else
@@ -155,5 +165,9 @@ public class ExchangeApi extends AbstractMuleApi {
     {
         super.configureRequest(builder);
         builder.header(EXCHANGE_TOKEN_HEADER, "Bearer " + exchangeToken);
+    }
+
+    public User getUser() {
+        return user;
     }
 }
