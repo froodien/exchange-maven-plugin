@@ -53,6 +53,13 @@ public class AddMojo extends AbstractMojo {
             readonly = true
     )
     private String anypointUri;
+    @Parameter(
+            name = "exchangeApiVersion",
+            defaultValue = MojoConstants.DEFAULT_EXCHANGE_API_VERSION,
+            readonly = true
+    )
+    private ExchangeApiVersion exchangeApiVersion;
+
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
@@ -61,7 +68,8 @@ public class AddMojo extends AbstractMojo {
                 getLog(),
                 anypointUsername,
                 anypointPassword,
-                MojoConstants.DEFAULT_ANYPOINT_ENVIRONMENT);
+                MojoConstants.DEFAULT_ANYPOINT_ENVIRONMENT,
+                exchangeApiVersion);
         exchangeApi.init();
 
         ExchangeObject exchangeObject = new ExchangeObject();
