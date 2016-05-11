@@ -31,7 +31,6 @@ public class ExchangeApi extends AbstractMuleApi {
             String password,
             String environment,
             ExchangeApiVersion exchangeApiVersion) {
-        // Business groups not supported yet
         super(uri, log, username, password, environment, null);
         this.exchangeApiVersion = exchangeApiVersion;
     }
@@ -52,9 +51,8 @@ public class ExchangeApi extends AbstractMuleApi {
      */
     public ExchangeObject updateExchangeObject(ExchangeObject exchangeObject) throws ApiException, IOException {
         ObjectMapper mapper = new ObjectMapper();
+        String object_path = exchangeApiVersion.buildExchangeObjectsPath(this, exchangeObject);
         Entity<String> json = Entity.json(mapper.writeValueAsString(exchangeObject));
-        Integer objectId = exchangeObject.getId();
-        String object_path = exchangeApiVersion.buildExchangeObjectsPath(this) + '/' + objectId;
         Response response = put(uri, object_path, json);
 
         if (response.getStatus() == 200)
@@ -76,8 +74,8 @@ public class ExchangeApi extends AbstractMuleApi {
      */
     public ExchangeObject createExchangeObject(ExchangeObject exchangeObject) throws ApiException, IOException {
         ObjectMapper mapper = new ObjectMapper();
+        String object_path = exchangeApiVersion.buildExchangeObjectsPath(this, null);
         Entity<String> json = Entity.json(mapper.writeValueAsString(exchangeObject));
-        String object_path = exchangeApiVersion.buildExchangeObjectsPath(this) + '/';
         Response response = post(uri, object_path, json);
 
         if (response.getStatus() == 201)
@@ -98,7 +96,7 @@ public class ExchangeApi extends AbstractMuleApi {
      */
     public ExchangeObject getExchangeObject(ExchangeObject exchangeObject) throws ApiException, IOException {
         ObjectMapper mapper = new ObjectMapper();
-        String object_path = exchangeApiVersion.buildExchangeObjectsPath(this) + '/';
+        String object_path = exchangeApiVersion.buildExchangeObjectsDomainPath(this);
         object_path += exchangeObject.getNameUrl();
         Response response = get(uri, object_path);
 
@@ -122,8 +120,7 @@ public class ExchangeApi extends AbstractMuleApi {
      */
     public ExchangeObject deleteExchangeObject(ExchangeObject exchangeObject) throws ApiException, IOException {
         ObjectMapper mapper = new ObjectMapper();
-        Integer objectId = exchangeObject.getId();
-        String object_path = exchangeApiVersion.buildExchangeObjectsPath(this) + '/' + objectId;
+        String object_path = exchangeApiVersion.buildExchangeObjectsPath(this, exchangeObject);
         Response response = delete(uri, object_path);
 
         if (response.getStatus() == 200)

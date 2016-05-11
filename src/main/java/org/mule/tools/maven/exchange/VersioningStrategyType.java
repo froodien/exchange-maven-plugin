@@ -21,9 +21,7 @@ public enum VersioningStrategyType {
                 boolean added = false;
                 for (Version existingVersion: existingVersions){
                     if (existingVersion.getMuleVersionId().equals(newVersion.getMuleVersionId())) {
-                        existingVersions.set(
-                                existingVersions.indexOf(existingVersion),
-                                newVersion);
+                        replaceVersion(existingVersions, existingVersion, newVersion);
                         added = true;
                     }
                 }
@@ -41,9 +39,7 @@ public enum VersioningStrategyType {
                 boolean added = false;
                 for (Version existingVersion: existingVersions){
                     if (existingVersion.getObjectVersion().equals(newVersion.getObjectVersion())) {
-                        existingVersions.set(
-                                existingVersions.indexOf(existingVersion),
-                                newVersion);
+                        replaceVersion(existingVersions, existingVersion, newVersion);
                         added = true;
                     }
                 }
@@ -61,6 +57,16 @@ public enum VersioningStrategyType {
             return null;
         }
     };
+
+
+    private static void replaceVersion(List<Version> existingVersions, Version existingVersion, Version newVersion){
+        if (newVersion.getDocUrl() == null) {
+            newVersion.setDocUrl(existingVersion.getDocUrl());
+        }
+        existingVersions.set(
+                existingVersions.indexOf(existingVersion),
+                newVersion);
+    }
 
     public List<Version> mergeVersions(List<Version> existingVersions, List<Version> newVersions) {
         return null;
