@@ -61,7 +61,7 @@ When running from command line, add the following configuration within Build -> 
 <plugin>
     <groupId>org.mule.tools</groupId>
     <artifactId>exchange-maven-plugin</artifactId>
-    <version>1.0.0</version>
+    <version>0.1.0</version>
     <configuration>
         <anypointUsername>${anypointUsername}</anypointUsername>
         <anypointPassword>${anypointPassword}</anypointPassword>
@@ -81,7 +81,7 @@ When running as part of the Maven deploy (e.g. in a Continuous Integration serve
 <plugin>
     <groupId>org.mule.tools</groupId>
     <artifactId>exchange-maven-plugin</artifactId>
-    <version>1.0.0</version>
+    <version>0.1.0</version>
     <configuration>
         <anypointUsername>${anypointUsername}</anypointUsername>
         <anypointPassword>${anypointPassword}</anypointPassword>
@@ -113,5 +113,5 @@ mvn exchange:add
 ## Running from commandline without configuration
 
 ```
-mvn org.mule.tools:exchange-maven-plugin:1.0.0:add -DnameUrl=template-name-url -DobjectType=template -DversioningStrategy=incremental -DanypointUsername=username -DanypointPassword=password
+mvn org.mule.tools:exchange-maven-plugin:0.1.0:add -DnameUrl=template-name-url -DobjectType=template -DversioningStrategy=incremental -DanypointUsername=username -DanypointPassword=password
 ```
