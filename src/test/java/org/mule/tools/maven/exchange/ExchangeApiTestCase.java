@@ -18,7 +18,7 @@ import java.util.List;
 @Ignore
 public class ExchangeApiTestCase
 {
-    private static final String URI = "https://dev.anypoint.mulesoft.com";
+    private static final String URI = "https://anypoint.mulesoft.com";
     private static final String USERNAME = System.getProperty("username");
     private static final String PASSWORD = System.getProperty("password");
     private static final String ENVIRONMENT = "Production";
@@ -26,6 +26,7 @@ public class ExchangeApiTestCase
     private static final String EXISTING_EXCHANGE_OBJECT_NAME_URL = "msdynamics-salesforce-contact-migration";
     private static final String EXCHANGE_OBJECT_NAME_URL = "object-sample";
     private static final String EXCHANGE_OBJECT_NAME = "Test Creation Object";
+    private static final String EXCHANGE_ORG_ID = "80eb9203-9f8b-455f-8b71-6e7ecb96af91";
     private static final String EXCHANGE_VERSION_MULE_VERSION_ID = "3.7";
     private static final String EXCHANGE_VERSION_DOWNLOAD_URL = "http://www.google.com";
     private static final String EXCHANGE_VERSION_DOC_URL = "http://www.google.com";
@@ -55,6 +56,7 @@ public class ExchangeApiTestCase
         // Create object
         ExchangeObject exchangeObject = createTestExchangeObject(EXCHANGE_OBJECT_NAME_URL + System.currentTimeMillis());
         verifyExchangeObjectDoesntExist(exchangeObject);
+        exchangeObject.setOrganizationId(EXCHANGE_ORG_ID);
         ExchangeObject createdExchangeObject = exchangeApi.createExchangeObject(exchangeObject);
         verifyExchangeObjectExist(createdExchangeObject);
 
@@ -68,6 +70,7 @@ public class ExchangeApiTestCase
         // Create object
         ExchangeObject exchangeObject = createTestExchangeObject(EXCHANGE_OBJECT_NAME_URL + System.currentTimeMillis());
         verifyExchangeObjectDoesntExist(exchangeObject);
+        exchangeObject.setOrganizationId(EXCHANGE_ORG_ID);
         ExchangeObject createdExchangeObject = exchangeApi.createExchangeObject(exchangeObject);
         verifyExchangeObjectExist(createdExchangeObject);
 

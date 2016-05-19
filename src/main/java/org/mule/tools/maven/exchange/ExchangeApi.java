@@ -74,7 +74,7 @@ public class ExchangeApi extends AbstractMuleApi {
      */
     public ExchangeObject createExchangeObject(ExchangeObject exchangeObject) throws ApiException, IOException {
         ObjectMapper mapper = new ObjectMapper();
-        String object_path = exchangeApiVersion.buildExchangeObjectsPath(this, null);
+        String object_path = exchangeApiVersion.buildExchangeObjectsPath(this, exchangeObject);
         Entity<String> json = Entity.json(mapper.writeValueAsString(exchangeObject));
         Response response = post(uri, object_path, json);
 

@@ -27,10 +27,10 @@ public enum ExchangeApiVersion {
     },
     v16("/exchange/api/organizations/%s/objects/"){
         public String buildExchangeObjectsPath(ExchangeApi exchangeApi, ExchangeObject exchangeObject){
-            if (exchangeObject == null) {
+            if (exchangeObject.getId() == null) {
                 return String.format(
                         exchangeObjectsPathTemplate,
-                        exchangeApi.getOrgId()
+                        exchangeObject.getOrganizationId()
                 );
             } else {
                 return String.format(

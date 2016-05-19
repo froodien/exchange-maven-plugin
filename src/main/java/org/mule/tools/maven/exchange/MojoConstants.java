@@ -16,4 +16,5 @@ public class MojoConstants {
     static final String DEFAULT_DESCRIPTION_FILE_SOURCE = "README.md";
     static final String DEFAULT_VERSIONING_STRATEGY = "incremental";
     static final String DEFAULT_EXCHANGE_API_VERSION = "v16";
+    static final String DEFAULT_BUSINESS_GROUP_ID = "19ff8fbd-cebb-4db6-b6ff-1ccd1b0ea0c8";
 }

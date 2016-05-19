@@ -63,7 +63,13 @@ public class AddMojo extends AbstractMojo {
             property = "exchangeApiVersion"
     )
     private ExchangeApiVersion exchangeApiVersion;
-
+    @Parameter(
+            name = "bussinessGroupId",
+            defaultValue = MojoConstants.DEFAULT_BUSINESS_GROUP_ID,
+            readonly = true,
+            property = "bussinessGroupId"
+    )
+    private String bussinessGroupId;
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
@@ -219,6 +225,7 @@ public class AddMojo extends AbstractMojo {
             try {
                 getLog().info("");
                 getLog().info("Project not found in Exchange, creating new entry...");
+                exchangeObject.setOrganizationId(bussinessGroupId);
                 exchangeApi.createExchangeObject(exchangeObject);
             } catch (IOException e) {
                 getLog().error("Create object in Exchange failed with error " + e.getMessage());
