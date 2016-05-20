@@ -93,9 +93,9 @@ public class AddMojo extends AbstractMojo {
     private void setupMandatoryValues(ExchangeObject exchangeObject) {
         getLog().info("");
         getLog().info("Getting mandatory values from Project...");
-        String artifactId = mavenProject.getArtifactId();
-        getLog().info("Project Name: " + artifactId);
-        exchangeObject.setName(artifactId);
+        String projectName = mavenProject.getName();
+        getLog().info("Project Name: " + projectName);
+        exchangeObject.setName(projectName);
         getLog().info("Exchange Name Url: " + nameUrl);
         exchangeObject.setNameUrl(nameUrl);
         getLog().info("Exchange Owner: " + anypointUsername);
