@@ -131,6 +131,17 @@ public class ExchangeApi extends AbstractMuleApi {
         throw new ApiException(response);
     }
 
+    public void requestForPublishing(ExchangeObject exchangeObject) throws ApiException, IOException {
+        String object_path = exchangeApiVersion.buildExchangeObjectsPath(this, exchangeObject);
+        Entity<String> json = Entity.json("{ }");
+        Response response = post(uri, object_path + "/publishingRequest", json);
+
+        if (response.getStatus() != 200)
+        {
+            throw new ApiException(response);
+        }
+    }
+
     private String obtainExchangeToken() {
         String bearerToken = null;
         try {

@@ -226,7 +226,8 @@ public class AddMojo extends AbstractMojo {
                 getLog().info("");
                 getLog().info("Project not found in Exchange, creating new entry...");
                 exchangeObject.setOrganizationId(bussinessGroupId);
-                exchangeApi.createExchangeObject(exchangeObject);
+                ExchangeObject createdExchangeObject = exchangeApi.createExchangeObject(exchangeObject);
+                exchangeApi.requestForPublishing(createdExchangeObject);
             } catch (IOException e) {
                 getLog().error("Create object in Exchange failed with error " + e.getMessage());
             }
