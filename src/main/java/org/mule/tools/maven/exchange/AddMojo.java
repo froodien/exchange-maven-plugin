@@ -87,7 +87,11 @@ public class AddMojo extends AbstractMojo {
         setupCurrentVersion(exchangeObject);
         setupExtraInformation(exchangeObject);
 
-        ProjectPublisher.upsertExchangeObject(exchangeApi, exchangeObject, versioningStrategy, getLog());
+        try {
+            ProjectPublisher.upsertExchangeObject(exchangeApi, exchangeObject, versioningStrategy, getLog());
+        } catch (IOException e) {
+            throw new MojoExecutionException("Exchange object upsert failed with error: " + e.getMessage());
+        }
     }
 
     private void setupMandatoryValues(ExchangeObject exchangeObject) {
