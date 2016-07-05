@@ -3,7 +3,6 @@ package org.mule.tools.maven.exchange.core;
 import org.mule.tools.maven.exchange.VersioningStrategyType;
 import org.mule.tools.maven.exchange.api.ExchangeApi;
 import org.mule.tools.maven.exchange.api.ExchangeObject;
-import org.mule.tools.maven.exchange.api.ExchangeObjectState;
 import org.apache.maven.plugin.logging.Log;
 import java.io.IOException;
 
@@ -26,12 +25,9 @@ public class ProjectPublisher {
                     mergeExchangeObjectsForUpdate(currentExchangeObject, exchangeObject, versioningStrategy);
             ExchangeObject updatedExchangeObject = exchangeApi.updateExchangeObject(finalExchangeObject);
 
-            // State transition scenarios:
-            // WIP -> WIP
-            // Request for approval -> Request for approval
-            // Published -> Published / Request for approval
-            if ((currentExchangeObject.getState().equals(ExchangeObjectState.published.id())) ||
-                    (currentExchangeObject.getState().equals(ExchangeObjectState.waiting_for_approval.id()))){
+            // State check: avoids contributors to update versions without notifying the admins
+            // Admins do not change states when using Update API operation
+            if (!currentExchangeObject.getState().equals(updatedExchangeObject.getState())){
                 exchangeApi.requestForPublishing(updatedExchangeObject);
             }
             log.info("Project successfully updated");
