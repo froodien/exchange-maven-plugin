@@ -3,9 +3,13 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.mule.tools</groupId>
     <artifactId>exchange-maven-plugin</artifactId>
-    <version>0.1.0</version>
+    <version>0.1.0-SNAPSHOT</version>
     <name>Exchange Maven Plugin</name>
     <packaging>maven-plugin</packaging>
+    <properties>
+        <jersey.version>2.19</jersey.version>
+    </properties>
+
     <build>
         <pluginManagement>
             <plugins>
@@ -42,14 +46,28 @@
                 <version>0.4.21</version>
                 <configuration>
                     <includeConstructors>true</includeConstructors>
-                    <sourceDirectory>${basedir}/src/main/resources/schema</sourceDirectory>
-                    <targetPackage>org.mule.tools.maven.exchange.api</targetPackage>
+                    <initializeCollections>true</initializeCollections>
                 </configuration>
                 <executions>
                     <execution>
+                        <id>generate-cs</id>
                         <goals>
                             <goal>generate</goal>
                         </goals>
+                        <configuration>
+                            <sourceDirectory>${basedir}/src/main/resources/schema/cs</sourceDirectory>
+                            <targetPackage>org.mule.tools.maven.exchange.api.cs</targetPackage>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>generate-exchange</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <sourceDirectory>${basedir}/src/main/resources/schema/exchange</sourceDirectory>
+                            <targetPackage>org.mule.tools.maven.exchange.api</targetPackage>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -118,11 +136,6 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.mule.tools.maven</groupId>
-            <artifactId>mule-maven-plugin</artifactId>
-            <version>2.1</version>
-        </dependency>
-        <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
             <version>2.4</version>
@@ -131,6 +144,16 @@
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>2.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>javax.ws.rs-api</artifactId>
+            <version>2.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-project</artifactId>
+            <version>2.0</version>
         </dependency>
         <!-- Testing deps -->
         <dependency>
@@ -144,6 +167,26 @@
             <artifactId>mockito-all</artifactId>
             <version>1.10.19</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-client</artifactId>
+            <version>${jersey.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-moxy</artifactId>
+            <version>${jersey.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-multipart</artifactId>
+            <version>${jersey.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.common</groupId>
+            <artifactId>mule-common</artifactId>
+            <version>3.8.0</version>
         </dependency>
     </dependencies>
     <distributionManagement>

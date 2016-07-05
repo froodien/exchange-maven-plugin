@@ -1,4 +1,4 @@
-package org.mule.tools.maven.exchange;
+package org.mule.tools.maven.exchange.api;
 
 public enum ExchangeObjectType {
     template {

@@ -1,0 +1,350 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string",
+        "id": "http://jsonschema.net/0/name"
+      },
+      "id": {
+        "type": "string",
+        "id": "http://jsonschema.net/0/id"
+      },
+      "createdAt": {
+        "type": "string",
+        "id": "http://jsonschema.net/0/createdAt"
+      },
+      "updatedAt": {
+        "type": "string",
+        "id": "http://jsonschema.net/0/updatedAt"
+      },
+      "ownerId": {
+        "type": "string",
+        "id": "http://jsonschema.net/0/ownerId"
+      },
+      "clientId": {
+        "type": "string",
+        "id": "http://jsonschema.net/0/clientId"
+      },
+      "domain": {
+        "type": "string",
+        "id": "http://jsonschema.net/0/domain"
+      },
+      "idprovider_id": {
+        "type": "string",
+        "id": "http://jsonschema.net/0/idprovider_id"
+      },
+      "isFederated": {
+        "type": "boolean",
+        "id": "http://jsonschema.net/0/isFederated"
+      },
+      "parentOrganizationIds": {
+        "type": "array",
+        "items": {},
+        "id": "http://jsonschema.net/0/parentOrganizationIds"
+      },
+      "tenantOrganizationIds": {
+        "type": "array",
+        "items": {},
+        "id": "http://jsonschema.net/0/tenantOrganizationIds"
+      },
+      "isMaster": {
+        "type": "boolean",
+        "id": "http://jsonschema.net/0/isMaster"
+      },
+      "ownerName": {
+        "type": "string",
+        "id": "http://jsonschema.net/0/ownerName"
+      },
+      "sessionTimeout": {
+        "type": "integer",
+        "id": "http://jsonschema.net/0/sessionTimeout"
+      },
+      "subscription": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "id": "http://jsonschema.net/0/subscription/type"
+          },
+          "expiration": {
+            "type": "string",
+            "id": "http://jsonschema.net/0/subscription/expiration"
+          }
+        },
+        "id": "http://jsonschema.net/0/subscription",
+        "required": [
+          "type",
+          "expiration"
+        ]
+      },
+      "entitlements": {
+        "type": "object",
+        "properties": {
+          "globalDeployment": {
+            "type": "boolean",
+            "id": "http://jsonschema.net/0/entitlements/globalDeployment"
+          },
+          "partnersProduction": {
+            "type": "object",
+            "properties": {
+              "assigned": {
+                "type": "integer",
+                "id": "http://jsonschema.net/0/entitlements/partnersProduction/assigned"
+              }
+            },
+            "id": "http://jsonschema.net/0/entitlements/partnersProduction",
+            "required": [
+              "assigned"
+            ]
+          },
+          "workerLoggingOverride": {
+            "type": "object",
+            "properties": {
+              "enabled": {
+                "type": "boolean",
+                "id": "http://jsonschema.net/0/entitlements/workerLoggingOverride/enabled"
+              }
+            },
+            "id": "http://jsonschema.net/0/entitlements/workerLoggingOverride",
+            "required": [
+              "enabled"
+            ]
+          },
+          "loadBalancer": {
+            "type": "object",
+            "properties": {
+              "assigned": {
+                "type": "integer",
+                "id": "http://jsonschema.net/0/entitlements/loadBalancer/assigned"
+              }
+            },
+            "id": "http://jsonschema.net/0/entitlements/loadBalancer",
+            "required": [
+              "assigned"
+            ]
+          },
+          "mqRequests": {
+            "type": "object",
+            "properties": {
+              "base": {
+                "type": "integer",
+                "id": "http://jsonschema.net/0/entitlements/mqRequests/base"
+              },
+              "addOn": {
+                "type": "integer",
+                "id": "http://jsonschema.net/0/entitlements/mqRequests/addOn"
+              }
+            },
+            "id": "http://jsonschema.net/0/entitlements/mqRequests",
+            "required": [
+              "base",
+              "addOn"
+            ]
+          },
+          "mqMessages": {
+            "type": "object",
+            "properties": {
+              "base": {
+                "type": "integer",
+                "id": "http://jsonschema.net/0/entitlements/mqMessages/base"
+              },
+              "addOn": {
+                "type": "integer",
+                "id": "http://jsonschema.net/0/entitlements/mqMessages/addOn"
+              }
+            },
+            "id": "http://jsonschema.net/0/entitlements/mqMessages",
+            "required": [
+              "base",
+              "addOn"
+            ]
+          },
+          "apis": {
+            "type": "object",
+            "properties": {
+              "enabled": {
+                "type": "boolean",
+                "id": "http://jsonschema.net/0/entitlements/apis/enabled"
+              }
+            },
+            "id": "http://jsonschema.net/0/entitlements/apis",
+            "required": [
+              "enabled"
+            ]
+          },
+          "vCoresSandbox": {
+            "type": "object",
+            "properties": {
+              "assigned": {
+                "type": "integer",
+                "id": "http://jsonschema.net/0/entitlements/vCoresSandbox/assigned"
+              },
+              "reassigned": {
+                "type": "integer",
+                "id": "http://jsonschema.net/0/entitlements/vCoresSandbox/reassigned"
+              }
+            },
+            "id": "http://jsonschema.net/0/entitlements/vCoresSandbox",
+            "required": [
+              "assigned",
+              "reassigned"
+            ]
+          },
+          "partnersSandbox": {
+            "type": "object",
+            "properties": {
+              "assigned": {
+                "type": "integer",
+                "id": "http://jsonschema.net/0/entitlements/partnersSandbox/assigned"
+              }
+            },
+            "id": "http://jsonschema.net/0/entitlements/partnersSandbox",
+            "required": [
+              "assigned"
+            ]
+          },
+          "createEnvironments": {
+            "type": "boolean",
+            "id": "http://jsonschema.net/0/entitlements/createEnvironments"
+          },
+          "gateways": {
+            "type": "object",
+            "properties": {
+              "assigned": {
+                "type": "integer",
+                "id": "http://jsonschema.net/0/entitlements/gateways/assigned"
+              }
+            },
+            "id": "http://jsonschema.net/0/entitlements/gateways",
+            "required": [
+              "assigned"
+            ]
+          },
+          "createSubOrgs": {
+            "type": "boolean",
+            "id": "http://jsonschema.net/0/entitlements/createSubOrgs"
+          },
+          "hybrid": {
+            "type": "object",
+            "properties": {
+              "enabled": {
+                "type": "boolean",
+                "id": "http://jsonschema.net/0/entitlements/hybrid/enabled"
+              }
+            },
+            "id": "http://jsonschema.net/0/entitlements/hybrid",
+            "required": [
+              "enabled"
+            ]
+          },
+          "vCoresProduction": {
+            "type": "object",
+            "properties": {
+              "assigned": {
+                "type": "integer",
+                "id": "http://jsonschema.net/0/entitlements/vCoresProduction/assigned"
+              },
+              "reassigned": {
+                "type": "integer",
+                "id": "http://jsonschema.net/0/entitlements/vCoresProduction/reassigned"
+              }
+            },
+            "id": "http://jsonschema.net/0/entitlements/vCoresProduction",
+            "required": [
+              "assigned",
+              "reassigned"
+            ]
+          },
+          "staticIps": {
+            "type": "object",
+            "properties": {
+              "assigned": {
+                "type": "integer",
+                "id": "http://jsonschema.net/0/entitlements/staticIps/assigned"
+              },
+              "reassigned": {
+                "type": "integer",
+                "id": "http://jsonschema.net/0/entitlements/staticIps/reassigned"
+              }
+            },
+            "id": "http://jsonschema.net/0/entitlements/staticIps",
+            "required": [
+              "assigned",
+              "reassigned"
+            ]
+          },
+          "externalIdentity": {
+            "type": "boolean",
+            "id": "http://jsonschema.net/0/entitlements/externalIdentity"
+          },
+          "autoscaling": {
+            "type": "boolean",
+            "id": "http://jsonschema.net/0/entitlements/autoscaling"
+          },
+          "armAlerts": {
+            "type": "boolean",
+            "id": "http://jsonschema.net/0/entitlements/armAlerts"
+          },
+          "messaging": {
+            "type": "object",
+            "properties": {
+              "assigned": {
+                "type": "integer",
+                "id": "http://jsonschema.net/0/entitlements/messaging/assigned"
+              }
+            },
+            "id": "http://jsonschema.net/0/entitlements/messaging",
+            "required": [
+              "assigned"
+            ]
+          }
+        },
+        "id": "http://jsonschema.net/0/entitlements",
+        "required": [
+          "globalDeployment",
+          "partnersProduction",
+          "workerLoggingOverride",
+          "loadBalancer",
+          "mqRequests",
+          "mqMessages",
+          "apis",
+          "vCoresSandbox",
+          "partnersSandbox",
+          "createEnvironments",
+          "gateways",
+          "createSubOrgs",
+          "hybrid",
+          "vCoresProduction",
+          "staticIps",
+          "externalIdentity",
+          "autoscaling",
+          "armAlerts",
+          "messaging"
+        ]
+      }
+    },
+    "id": "http://jsonschema.net/0",
+    "required": [
+      "name",
+      "id",
+      "createdAt",
+      "updatedAt",
+      "ownerId",
+      "clientId",
+      "domain",
+      "idprovider_id",
+      "isFederated",
+      "parentOrganizationIds",
+      "tenantOrganizationIds",
+      "isMaster",
+      "ownerName",
+      "sessionTimeout",
+      "subscription",
+      "entitlements"
+    ]
+  },
+  "id": "http://jsonschema.net"
+}

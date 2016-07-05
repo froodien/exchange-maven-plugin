@@ -4,6 +4,9 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+
+import org.mule.tools.maven.exchange.api.ExchangeApi;
+import org.mule.tools.maven.exchange.api.ExchangeApiVersion;
 import org.mule.tools.maven.exchange.api.ExchangeObject;
 
 import org.junit.Before;
@@ -21,7 +24,6 @@ public class ExchangeApiTestCase
     private static final String URI = "https://anypoint.mulesoft.com";
     private static final String USERNAME = System.getProperty("username");
     private static final String PASSWORD = System.getProperty("password");
-    private static final String ENVIRONMENT = "Production";
 
     private static final String EXISTING_EXCHANGE_OBJECT_NAME_URL = "msdynamics-salesforce-contact-migration";
     private static final String EXCHANGE_OBJECT_NAME_URL = "object-sample";
@@ -39,9 +41,8 @@ public class ExchangeApiTestCase
     private ExchangeApi exchangeApi;
 
     @Before
-    public void setup()
-    {
-        exchangeApi = new ExchangeApi(URI, null, USERNAME, PASSWORD, ENVIRONMENT, EXCHANGE_API_VERSION);
+    public void setup() throws IOException {
+        exchangeApi = new ExchangeApi(URI, null, USERNAME, PASSWORD, EXCHANGE_API_VERSION, EXCHANGE_ORG_ID);
         exchangeApi.init();
     }
 
@@ -56,7 +57,7 @@ public class ExchangeApiTestCase
         // Create object
         ExchangeObject exchangeObject = createTestExchangeObject(EXCHANGE_OBJECT_NAME_URL + System.currentTimeMillis());
         verifyExchangeObjectDoesntExist(exchangeObject);
-        exchangeObject.setOrganizationId(EXCHANGE_ORG_ID);
+        exchangeObject.setOrganizationId(exchangeApi.getOrgId());
         ExchangeObject createdExchangeObject = exchangeApi.createExchangeObject(exchangeObject);
         verifyExchangeObjectExist(createdExchangeObject);
 
@@ -70,7 +71,7 @@ public class ExchangeApiTestCase
         // Create object
         ExchangeObject exchangeObject = createTestExchangeObject(EXCHANGE_OBJECT_NAME_URL + System.currentTimeMillis());
         verifyExchangeObjectDoesntExist(exchangeObject);
-        exchangeObject.setOrganizationId(EXCHANGE_ORG_ID);
+        exchangeObject.setOrganizationId(exchangeApi.getOrgId());
         ExchangeObject createdExchangeObject = exchangeApi.createExchangeObject(exchangeObject);
         verifyExchangeObjectExist(createdExchangeObject);
 

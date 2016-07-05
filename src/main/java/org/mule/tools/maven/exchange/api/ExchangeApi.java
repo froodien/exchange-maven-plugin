@@ -1,13 +1,9 @@
-package org.mule.tools.maven.exchange;
+package org.mule.tools.maven.exchange.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.maven.plugin.logging.Log;
-import org.mule.tools.maven.exchange.api.ExchangeAuthorizationResponse;
-import org.mule.tools.maven.exchange.api.ExchangeObject;
-import org.mule.tools.maven.exchange.api.User;
-import org.mule.tools.maven.plugin.mule.AbstractMuleApi;
-import org.mule.tools.maven.plugin.mule.ApiException;
+import org.mule.tools.maven.exchange.api.cs.AbstractMuleApi;
+import org.mule.tools.maven.exchange.api.cs.ApiException;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
@@ -29,24 +25,27 @@ public class ExchangeApi extends AbstractMuleApi {
             Log log,
             String username,
             String password,
-            String environment,
-            ExchangeApiVersion exchangeApiVersion) {
-        super(uri, log, username, password, environment, null);
+            ExchangeApiVersion exchangeApiVersion,
+            String businessGroup) {
+        super(uri, log, username, password, businessGroup);
         this.exchangeApiVersion = exchangeApiVersion;
     }
 
     @Override
-    public void init()
-    {
+    public void init() throws IOException {
         super.init();
-        exchangeToken = obtainExchangeToken();
+        try {
+            exchangeToken = obtainExchangeToken();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
      * Updates an object entry in Exchange from its model object.
      * @param exchangeObject The object to update in Exchange.
      * @return The object when updated.
-     * @throws org.mule.tools.maven.plugin.mule.ApiException if not successful.
+     * @throws org.mule.tools.maven.exchange.api.cs.ApiException if not successful.
      * @throws java.io.IOException if model error.
      */
     public ExchangeObject updateExchangeObject(ExchangeObject exchangeObject) throws ApiException, IOException {
@@ -69,7 +68,7 @@ public class ExchangeApi extends AbstractMuleApi {
      * Creates an object entry in Exchange from its model object.
      * @param exchangeObject The object to create in Exchange.
      * @return The object when created.
-     * @throws org.mule.tools.maven.plugin.mule.ApiException if not successful.
+     * @throws org.mule.tools.maven.exchange.api.cs.ApiException if not successful.
      * @throws java.io.IOException if model error.
      */
     public ExchangeObject createExchangeObject(ExchangeObject exchangeObject) throws ApiException, IOException {
@@ -92,12 +91,12 @@ public class ExchangeApi extends AbstractMuleApi {
      * Looks up an object by its model object.
      * @param exchangeObject The object to look up.
      * @return The object found, or null if it does not exist.
-     * @throws org.mule.tools.maven.plugin.mule.ApiException if not successful.
+     * @throws org.mule.tools.maven.exchange.api.cs.ApiException if not successful.
      */
     public ExchangeObject getExchangeObject(ExchangeObject exchangeObject) throws ApiException, IOException {
         ObjectMapper mapper = new ObjectMapper();
         String object_path = exchangeApiVersion.buildExchangeObjectsDomainPath(this);
-        object_path += exchangeObject.getNameUrl();
+        object_path += "/" + exchangeObject.getNameUrl();
         Response response = get(uri, object_path);
 
         if (response.getStatus() == 200)
@@ -116,7 +115,7 @@ public class ExchangeApi extends AbstractMuleApi {
      * Deletes an object by its model object.
      * @param exchangeObject The object to delete.
      * @return The object when deleted.
-     * @throws org.mule.tools.maven.plugin.mule.ApiException if not successful.
+     * @throws org.mule.tools.maven.exchange.api.cs.ApiException if not successful.
      */
     public ExchangeObject deleteExchangeObject(ExchangeObject exchangeObject) throws ApiException, IOException {
         ObjectMapper mapper = new ObjectMapper();
@@ -142,13 +141,8 @@ public class ExchangeApi extends AbstractMuleApi {
         }
     }
 
-    private String obtainExchangeToken() {
-        String bearerToken = null;
-        try {
-            bearerToken = (String) FieldUtils.readField(this, "bearerToken", true);
-        } catch (IllegalAccessException e) {
-            throw new IllegalStateException(e);
-        }
+    private String obtainExchangeToken() throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
         String json_string = String.format(EXCHANGE_TOKEN_REQUEST_TEMPLATE, bearerToken);
         Entity<String> json = Entity.json(json_string);
 
@@ -156,9 +150,11 @@ public class ExchangeApi extends AbstractMuleApi {
 
         if (response.getStatus() == 200)
         {
-            ExchangeAuthorizationResponse authorizationResponse = response.readEntity(
-                    ExchangeAuthorizationResponse.class
-            );
+            ExchangeAuthorizationResponse authorizationResponse =
+                    mapper.readValue(
+                            response.readEntity(String.class),
+                            ExchangeAuthorizationResponse.class
+                    );
             user = authorizationResponse.getUser();
             return authorizationResponse.getToken();
         }

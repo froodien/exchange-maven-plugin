@@ -1,21 +1,18 @@
 package org.mule.tools.maven.exchange;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
-import org.mule.tools.maven.exchange.api.ExchangeObject;
-import org.mule.tools.maven.exchange.api.Version;
+import org.mule.tools.maven.exchange.api.*;
+import org.mule.tools.maven.exchange.core.ProjectAnalyzer;
+import org.mule.tools.maven.exchange.core.ProjectPublisher;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * This Maven plugin allows to create and update Mule Applications
@@ -44,7 +41,6 @@ public class AddMojo extends AbstractMojo {
     private VersioningStrategyType versioningStrategy;
     @Parameter(
             name = "muleRuntimeVersion",
-            defaultValue = MojoConstants.DEFAULT_MULE_RUNTIME,
             readonly = true,
             property = "muleRuntimeVersion"
     )
@@ -64,12 +60,12 @@ public class AddMojo extends AbstractMojo {
     )
     private ExchangeApiVersion exchangeApiVersion;
     @Parameter(
-            name = "bussinessGroupId",
-            defaultValue = MojoConstants.DEFAULT_BUSINESS_GROUP_ID,
+            name = "businessGroup",
+            required = true,
             readonly = true,
-            property = "bussinessGroupId"
+            property = "businessGroup"
     )
-    private String bussinessGroupId;
+    private String businessGroup;
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
@@ -78,30 +74,34 @@ public class AddMojo extends AbstractMojo {
                 getLog(),
                 anypointUsername,
                 anypointPassword,
-                MojoConstants.DEFAULT_ANYPOINT_ENVIRONMENT,
-                exchangeApiVersion);
-        exchangeApi.init();
+                exchangeApiVersion,
+                businessGroup);
+        try {
+            exchangeApi.init();
+        } catch (IOException e) {
+            throw new MojoExecutionException(e.getMessage());
+        }
 
         ExchangeObject exchangeObject = new ExchangeObject();
         setupMandatoryValues(exchangeObject);
         setupCurrentVersion(exchangeObject);
         setupExtraInformation(exchangeObject);
 
-        upsertExchangeObject(exchangeApi, exchangeObject);
+        ProjectPublisher.upsertExchangeObject(exchangeApi, exchangeObject, versioningStrategy, getLog());
     }
 
     private void setupMandatoryValues(ExchangeObject exchangeObject) {
         getLog().info("");
         getLog().info("Getting mandatory values from Project...");
-        String projectName = mavenProject.getName();
-        getLog().info("Project Name: " + projectName);
-        exchangeObject.setName(projectName);
-        getLog().info("Exchange Name Url: " + nameUrl);
+
+        exchangeObject.setName(ProjectAnalyzer.obtainName(mavenProject, getLog()));
         exchangeObject.setNameUrl(nameUrl);
-        getLog().info("Exchange Owner: " + anypointUsername);
         exchangeObject.setOwner(anypointUsername);
-        getLog().info("Exchange Object type: " + objectType);
         exchangeObject.setTypeId(objectType.id());
+
+        getLog().info("Exchange Name Url: " + nameUrl);
+        getLog().info("Exchange Owner: " + anypointUsername);
+        getLog().info("Exchange Object type: " + objectType);
     }
 
     private void setupCurrentVersion(ExchangeObject exchangeObject) {
@@ -110,21 +110,11 @@ public class AddMojo extends AbstractMojo {
         getLog().info("");
         getLog().info("Getting current version values from Project...");
 
-        String objectVersion = mavenProject.getVersion();
-        getLog().info("Exchange Object version: " + objectVersion);
-        version.setObjectVersion(objectVersion);
-
-        String muleRuntimeVersion = obtainMuleRuntimeVersion();
-        getLog().info("Mule Version ID: " + muleRuntimeVersion);
-        version.setMuleVersionId(muleRuntimeVersion);
-
-        String downloadUrl = obtainDownloadUrl();
-        getLog().info("Version Download URL: " + downloadUrl);
-        version.setDownloadUrl(downloadUrl);
-
-        String docUrl = obtainDocUrl();
-        getLog().info("Version Doc URL: " + docUrl);
-        version.setDocUrl(docUrl);
+        version.setObjectVersion(ProjectAnalyzer.obtainVersion(mavenProject, getLog()));
+        version.setDownloadUrl(ProjectAnalyzer.obtainDownloadUrl(mavenProject, getLog()));
+        version.setDocUrl(ProjectAnalyzer.obtainDocUrl(mavenProject, getLog()));
+        version.setMuleVersionId(
+                ProjectAnalyzer.obtainMuleRuntimeVersion(mavenProject, getLog(), this.muleRuntimeVersion));
 
         versions.add(version);
         exchangeObject.setVersions(versions);
@@ -133,118 +123,7 @@ public class AddMojo extends AbstractMojo {
     private void setupExtraInformation(ExchangeObject exchangeObject) {
         getLog().info("");
         getLog().info("Getting extra information from Project...");
-        exchangeObject.setDescription(obtainDescription());
+        exchangeObject.setDescription(ProjectAnalyzer.obtainDescription(getLog()));
     }
 
-    private String obtainMuleRuntimeVersion() {
-        getLog().info("Attempting to get Mule Runtime version from 'mule.version' property...");
-        String runtimeVersion = mavenProject.getProperties().getProperty("mule.version");
-        if (runtimeVersion == null) {
-            getLog().info("'mule.version' not found, using 'muleRuntimeVersion' parameter");
-            runtimeVersion = this.muleRuntimeVersion;
-        } else {
-            Pattern pattern = Pattern.compile(MojoConstants.MULE_RUNTIME_VERSION_PATTERN_MATCHER);
-            Matcher matcher = pattern.matcher(runtimeVersion);
-            if (matcher.find()) {
-                runtimeVersion = matcher.group(1);
-            } else {
-                runtimeVersion = this.muleRuntimeVersion;
-            }
-        }
-        return runtimeVersion;
-    }
-
-    private String obtainDescription() {
-        String description;
-        try {
-            getLog().info("Attempting to get Description from README.md file");
-            description = FileUtils.readFileToString(new File(MojoConstants.DEFAULT_DESCRIPTION_FILE_SOURCE));
-            getLog().info("Found README.md file, loading Description");
-        } catch (IOException e) {
-            getLog().info("README.md file not found, setting Description placeholder");
-            description = MojoConstants.DEFAULT_DESCRIPTION_PLACEHOLDER;
-        }
-
-        return description;
-    }
-
-    private String obtainDownloadUrl() {
-        if (mavenProject.getDistributionManagement() != null) {
-            String downloadUrl = mavenProject.getDistributionManagement().getRepository().getUrl() +
-                    mavenProject.getDistributionManagementArtifactRepository().pathOf(mavenProject.getArtifact());
-
-            Pattern pattern = Pattern.compile(MojoConstants.MULE_DOWNLOAD_URL_PATTERN_MATCHER);
-            Matcher matcher = pattern.matcher(downloadUrl);
-            if (matcher.find()) {
-                downloadUrl = matcher.group(1) + ".zip";
-            }
-            return downloadUrl;
-        }
-        return null;
-    }
-
-    private String obtainDocUrl() {
-        if (mavenProject.getScm() != null) {
-            File readme = new File(MojoConstants.DEFAULT_DESCRIPTION_FILE_SOURCE);
-            if (readme.exists()) {
-                String connectionUrl = mavenProject.getScm().getConnection();
-                Pattern pattern = Pattern.compile(MojoConstants.MULE_GITHUB_CONNECTION_URL_PATTERN_MATCHER);
-                Matcher matcher = pattern.matcher(connectionUrl);
-                if (matcher.find()) {
-                    return matcher.group(1)
-                            + "/blob/"
-                            + mavenProject.getScm().getTag()
-                            + "/"
-                            + MojoConstants.DEFAULT_DESCRIPTION_FILE_SOURCE;
-                }
-            }
-        }
-        return null;
-    }
-
-    private void upsertExchangeObject(ExchangeApi exchangeApi, ExchangeObject exchangeObject) {
-        ExchangeObject currentExchangeObject = null;
-        try {
-            getLog().info("");
-            getLog().info("Checking if Project already exists in Exchange...");
-            currentExchangeObject = exchangeApi.getExchangeObject(exchangeObject);
-        } catch (IOException e) {
-            getLog().error("Get object from Exchange failed with error " + e.getMessage());
-        }
-        if (currentExchangeObject != null) {
-            getLog().info("");
-            getLog().info("Project found in Exchange, updating versions...");
-            ExchangeObject finalExchangeObject = mergeExchangeObjectsForUpdate(currentExchangeObject, exchangeObject);
-            try {
-                exchangeApi.updateExchangeObject(finalExchangeObject);
-            } catch (IOException e) {
-                getLog().error("Update object in Exchange failed with error " + e.getMessage());
-            }
-            getLog().info("Project successfully updated");
-        } else {
-            try {
-                getLog().info("");
-                getLog().info("Project not found in Exchange, creating new entry...");
-                exchangeObject.setOrganizationId(bussinessGroupId);
-                ExchangeObject createdExchangeObject = exchangeApi.createExchangeObject(exchangeObject);
-                exchangeApi.requestForPublishing(createdExchangeObject);
-            } catch (IOException e) {
-                getLog().error("Create object in Exchange failed with error " + e.getMessage());
-            }
-            getLog().info("Project successfully created");
-        }
-    }
-
-    private ExchangeObject mergeExchangeObjectsForUpdate(
-            ExchangeObject currentExchangeObject, ExchangeObject newExchangeObject) {
-
-        currentExchangeObject.setVersions(
-                versioningStrategy.mergeVersions(
-                        currentExchangeObject.getVersions(),
-                        newExchangeObject.getVersions()
-                )
-        );
-
-        return currentExchangeObject;
-    }
 }

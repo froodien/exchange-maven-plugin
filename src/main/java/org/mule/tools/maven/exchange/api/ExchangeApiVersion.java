@@ -1,6 +1,4 @@
-package org.mule.tools.maven.exchange;
-
-import org.mule.tools.maven.exchange.api.ExchangeObject;
+package org.mule.tools.maven.exchange.api;
 
 public enum ExchangeApiVersion {
     v15("/exchange/api/%s/objects") {
@@ -48,7 +46,7 @@ public enum ExchangeApiVersion {
         }
     };
 
-    public String exchangeObjectsPathTemplate;
+    public final String exchangeObjectsPathTemplate;
 
     ExchangeApiVersion(String exchangeObjectsPathTemplate){
         this.exchangeObjectsPathTemplate = exchangeObjectsPathTemplate;
@@ -61,5 +59,4 @@ public enum ExchangeApiVersion {
     public String buildExchangeObjectsDomainPath(ExchangeApi exchangeApi){
         return "";
     }
-
 }
