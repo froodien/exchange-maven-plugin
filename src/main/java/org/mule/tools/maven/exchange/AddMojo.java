@@ -1,15 +1,20 @@
 package org.mule.tools.maven.exchange;
 
+import org.apache.maven.settings.Settings;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.project.MavenProject;
 import org.mule.tools.maven.exchange.api.*;
 import org.mule.tools.maven.exchange.core.ProjectAnalyzer;
 import org.mule.tools.maven.exchange.core.ProjectPublisher;
+import org.sonatype.plexus.components.sec.dispatcher.SecDispatcher;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +29,10 @@ import java.util.List;
 public class AddMojo extends AbstractMojo {
     @Parameter( defaultValue = "${project}", readonly = true)
     private MavenProject mavenProject;
+    @Parameter( defaultValue = "${settings}", readonly = true )
+    private Settings settings;
+    @Component( hint = "mng-4384")
+    private SecDispatcher secDispatcher;
     @Parameter( name = "anypointUsername", required = true, readonly = true, property = "anypointUsername")
     private String anypointUsername;
     @Parameter( name = "anypointPassword", required = true, readonly = true, property = "anypointPassword")
@@ -78,19 +87,17 @@ public class AddMojo extends AbstractMojo {
                 businessGroup);
         try {
             exchangeApi.init();
-        } catch (IOException e) {
-            throw new MojoExecutionException(e.getMessage());
-        }
-
-        ExchangeObject exchangeObject = new ExchangeObject();
-        setupMandatoryValues(exchangeObject);
-        setupCurrentVersion(exchangeObject);
-        setupExtraInformation(exchangeObject);
-
-        try {
+            ExchangeObject exchangeObject = new ExchangeObject();
+            setupMandatoryValues(exchangeObject);
+            setupCurrentVersion(exchangeObject);
+            setupExtraInformation(exchangeObject);
             ProjectPublisher.upsertExchangeObject(exchangeApi, exchangeObject, versioningStrategy, getLog());
         } catch (IOException e) {
-            throw new MojoExecutionException("Exchange object upsert failed with error: " + e.getMessage());
+            throw new MojoExecutionException(e.getMessage());
+        } catch (ParserConfigurationException e) {
+            throw new MojoExecutionException(e.getMessage());
+        } catch (SAXException e) {
+            throw new MojoExecutionException(e.getMessage());
         }
     }
 
@@ -108,17 +115,29 @@ public class AddMojo extends AbstractMojo {
         getLog().info("Exchange Object type: " + objectType);
     }
 
-    private void setupCurrentVersion(ExchangeObject exchangeObject) {
+    private void setupCurrentVersion(ExchangeObject exchangeObject) throws IOException, ParserConfigurationException, SAXException {
         List<Version> versions = new ArrayList();
         Version version = new Version();
         getLog().info("");
         getLog().info("Getting current version values from Project...");
 
-        version.setObjectVersion(ProjectAnalyzer.obtainVersion(mavenProject, getLog()));
-        version.setDownloadUrl(ProjectAnalyzer.obtainDownloadUrl(mavenProject, getLog()));
-        version.setDocUrl(ProjectAnalyzer.obtainDocUrl(mavenProject, getLog()));
-        version.setMuleVersionId(
-                ProjectAnalyzer.obtainMuleRuntimeVersion(mavenProject, getLog(), this.muleRuntimeVersion));
+        String downloadUrl = ProjectAnalyzer.obtainDownloadUrl(mavenProject, getLog());
+
+        if (!exchangeObject.getTypeId().equals(ExchangeObjectType.connector.id())) {
+            // Download URL is not added to connectors versions
+            version.setDownloadUrl( downloadUrl);
+            version.setDocUrl(ProjectAnalyzer.obtainDocUrl(mavenProject, getLog()));
+            version.setObjectVersion(ProjectAnalyzer.obtainVersion(mavenProject, getLog()));
+            version.setMuleVersionId(
+                    ProjectAnalyzer.obtainMuleRuntimeVersion(mavenProject, getLog(), this.muleRuntimeVersion));
+        } else {
+            version = ProjectAnalyzer.obtainConnectorVersionFromArtifact(
+                    mavenProject,
+                    getLog(),
+                    settings,
+                    secDispatcher,
+                    downloadUrl);
+        }
 
         versions.add(version);
         exchangeObject.setVersions(versions);

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component-set>
+    <components>
+        <component>
+            <role>org.apache.maven.scm.plugin.SettingsDecrypter</role>
+            <role-hint>default</role-hint>
+            <implementation>org.apache.maven.scm.plugin.SettingsDecrypter</implementation>
+            <requirements>
+                <requirement>
+                    <role>org.sonatype.plexus.components.sec.dispatcher.SecDispatcher</role>
+                    <role-hint>mng-4384</role-hint>
+                    <field-name>secDispatcher</field-name>
+                </requirement>
+            </requirements>
+        </component>
+
+        <component>
+            <role>org.sonatype.plexus.components.sec.dispatcher.SecDispatcher</role>
+            <role-hint>mng-4384</role-hint>
+            <implementation>org.sonatype.plexus.components.sec.dispatcher.DefaultSecDispatcher</implementation>
+            <requirements>
+                <requirement>
+                    <role>org.sonatype.plexus.components.cipher.PlexusCipher</role>
+                    <field-name>_cipher</field-name>
+                </requirement>
+            </requirements>
+            <configuration>
+                <_configuration-file>~/.m2/settings-security.xml</_configuration-file>
+            </configuration>
+        </component>
+    </components>
+</component-set>
