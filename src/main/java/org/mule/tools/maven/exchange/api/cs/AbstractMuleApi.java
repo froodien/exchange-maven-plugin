@@ -53,6 +53,12 @@ public abstract class AbstractMuleApi extends AbstractApi
     }
 
     private String getBearerToken(String username, String password) throws IOException {
+        // Supports either password or CS access token
+        Pattern pattern = Pattern.compile(UUID_PATTERN_MATCHER);
+        Matcher matcher = pattern.matcher(password);
+        if (matcher.find()) {
+            return password;
+        }
         ObjectMapper mapper = new ObjectMapper();
         Entity<String> json = Entity.json("{\"username\": \"" + username + "\", \"password\": \"" + password + "\"}");
         Response response = post(uri, LOGIN, json);
