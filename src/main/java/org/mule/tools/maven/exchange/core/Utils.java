@@ -104,6 +104,16 @@ public class Utils {
         return connectorAttributes;
     }
 
+    public static String versionWithoutWatermark(String version) {
+        Pattern pattern = Pattern.compile(MojoConstants.CONNECTOR_VERSION_PATTERN_MATCHER);
+        Matcher matcher = pattern.matcher(version);
+        if (matcher.find()) {
+            return matcher.group(1);
+        } else {
+            return null;
+        }
+    }
+
     private static String obtainMinMuleVersion(String featureId) {
         Pattern pattern = Pattern.compile(MojoConstants.CONNECTOR_FEATURE_RUNTIME_PATTERN_MATCHER);
         Matcher matcher = pattern.matcher(featureId);
