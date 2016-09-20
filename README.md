@@ -10,15 +10,26 @@ updates as explained in the next section.
 ## Use cases
 Main use cases of this plugin are:
 
-+ Taking a mavenized project, gathering some specific data from it (such as project name, description, version, 
-Mule Runtime, etc) and creating a new object in Anypoint Exchange (creation)
-+ Taking a mavenized project that is already published in Anypoint Exchange and updating with the new version details 
-after deployment phase (update)
++ Taking a mavenized Mule project, gathering some specific data from it (such as project name, description, version, 
+Mule Runtime, etc) and creating a new object in Anypoint Exchange (creation).
++ Taking a mavenized Mule project that is already published in Anypoint Exchange and updating with the new version 
+details after deployment phase (update).
 
 This plugin does not:
 
-+ Handle artifacts deployments
-+ Provide upload methods to any hosting service
++ Handle artifacts deployments.
++ Provide upload methods to any hosting service.
+
+### Integration with Exchange workflow
+
++ When the plugin creates a new Exchange object, its state will be set as "Work in progress".
++ When the plugin updates an existent Exchange object, it will remain with the same state the object had before. 
+If the user cannot publish to the BG, the modified object will be submitted for revision by an Admin.
+
+### Notes
+
++ The **anypointPassword** parameter works with either password or CS token.
++ The **businessGroup** parameter works with either BG route (check examples below) or its API ID. 
 
 ## Support
 
@@ -32,11 +43,11 @@ This plugin works in Mac OS, Linux and Windows, with Maven v3.1.1 and above.
 
 ## Maven dependency
 
-```
+```xml
 <plugin>
   <groupId>org.mule.tools</groupId>
   <artifactId>exchange-maven-plugin</artifactId>
-  <version>${exchange.version}</version>
+  <version>${exchange.plugin.version}</version>
 </plugin>
 ```
 
@@ -44,7 +55,7 @@ This plugin works in Mac OS, Linux and Windows, with Maven v3.1.1 and above.
 
 Add the following Maven Repository to your settings.xml file.     
 
-```
+```xml
 <pluginRepositories>
     <pluginRepository>
         <id>mule-public</id>
@@ -57,40 +68,42 @@ Add the following Maven Repository to your settings.xml file.
 
 When running from command line, add the following configuration within Build -> Plugins section:
 
-```
+```xml
 <plugin>
     <groupId>org.mule.tools</groupId>
     <artifactId>exchange-maven-plugin</artifactId>
-    <version>0.1.0</version>
+    <version>${exchange.plugin.version}</version>
     <configuration>
         <anypointUsername>${anypointUsername}</anypointUsername>
         <anypointPassword>${anypointPassword}</anypointPassword>
         <nameUrl>template-name-url</nameUrl>
         <objectType>template</objectType>
+        <businessGroup>MasterOrg\BG1</businessGroup>
         <!-- Optional Values (with defaults) -->
         <versioningStrategy>incremental</versioningStrategy>
         <anypointUri>https://anypoint.mulesoft.com</anypointUri>
-        <muleRuntimeVersion>3.7</muleRuntimeVersion>
+        <muleRuntimeVersion>3.8</muleRuntimeVersion>
     </configuration>
 </plugin>
 ```
 
 When running as part of the Maven deploy (e.g. in a Continuous Integration server), add after the latest plugin:
 
-```
+```xml
 <plugin>
     <groupId>org.mule.tools</groupId>
     <artifactId>exchange-maven-plugin</artifactId>
-    <version>0.1.0</version>
+    <version>${exchange.plugin.version}</version>
     <configuration>
         <anypointUsername>${anypointUsername}</anypointUsername>
         <anypointPassword>${anypointPassword}</anypointPassword>
         <nameUrl>template-name-url</nameUrl>
         <objectType>template</objectType>
+        <businessGroup>MasterOrg\BG1</businessGroup>
         <!-- Optional Values (with defaults) -->
         <versioningStrategy>incremental</versioningStrategy>
         <anypointUri>https://anypoint.mulesoft.com</anypointUri>
-        <muleRuntimeVersion>3.7</muleRuntimeVersion>
+        <muleRuntimeVersion>3.8</muleRuntimeVersion>
     </configuration>
     <executions>
         <execution>
@@ -113,5 +126,5 @@ mvn exchange:add
 ## Running from commandline without configuration
 
 ```
-mvn org.mule.tools:exchange-maven-plugin:0.1.0:add -DnameUrl=template-name-url -DobjectType=template -DversioningStrategy=incremental -DanypointUsername=username -DanypointPassword=password
+mvn org.mule.tools:exchange-maven-plugin:0.1.0:add -DnameUrl=template-name-url -DobjectType=template -DversioningStrategy=incremental -DbusinessGroup=MasterOrg -DanypointUsername=username -DanypointPassword=password
 ```
