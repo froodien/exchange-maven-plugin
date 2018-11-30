@@ -1,3 +1,6 @@
+# Current Version
+From https://forums.mulesoft.com/questions/94804/maven-exchange-api.html, this project is out of scope and we must refer to https://docs.mulesoft.com/anypoint-exchange/to-publish-assets-maven
+
 # exchange-maven-plugin
 
 This Maven plugin allows to create and update objects (entries) in Anypoint Exchange by using its public API, 
